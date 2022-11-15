@@ -2,12 +2,12 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY NOT NULL,
-    username CHAR(128) UNIQUE NOT NULL,
-    email CHAR(256) UNIQUE NOT NULL,
-    role CHAR(512) NOT NULL, -- For Website administrating.
+    username VARCHAR(128) UNIQUE NOT NULL,
+    email VARCHAR(256) UNIQUE NOT NULL,
+    role VARCHAR(512) NOT NULL, -- For Website administrating.
     rating INTEGER NOT NULL,
-    password CHAR(1024) NOT NULL,
-    salt CHAR(128) NOT NULL, -- not used yet
+    password VARCHAR(1024) NOT NULL,
+    salt VARCHAR(128) NOT NULL, -- not used yet
     disable BOOLEAN NOT NULL
 );
 INSERT INTO users (username, email, role, password, salt, rating, disable) VALUES (
@@ -20,10 +20,10 @@ CREATE TABLE projects (
     id SERIAL PRIMARY KEY NOT NULL,
     owner INTEGER NOT NULL REFERENCES users(id) ON UPDATE CASCADE,
     type INTEGER NOT NULL,
-    name CHAR(256) UNIQUE NOT NULL,
-    tags CHAR(512),
-    ori_lang CHAR(16) NOT NULL,
-    tar_lang CHAR(16) NOT NULL
+    name VARCHAR(256) UNIQUE NOT NULL,
+    tags VARCHAR(512),
+    ori_lang VARCHAR(16) NOT NULL,
+    tar_lang VARCHAR(16) NOT NULL
 );
 
 -- proj/group
@@ -32,7 +32,7 @@ CREATE TABLE user_group_info (
     id SERIAL PRIMARY KEY NOT NULL,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     proj_id INTEGER REFERENCES projects(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    role CHAR(256) -- For Project administrating.
+    role VARCHAR(256) -- For Project administrating.
 );
 
 -- proj/file
@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS categories CASCADE;
 CREATE TABLE categories (
     id SERIAL PRIMARY KEY NOT NULL,
     proj_id INTEGER REFERENCES projects(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    name CHAR(512) NOT NULL,
-    "desc" CHAR(4096) NOT NULL
+    name VARCHAR(512) NOT NULL,
+    "desc" VARCHAR(4096) NOT NULL
 );
 
 CREATE INDEX proj_idx ON categories(proj_id);
@@ -50,9 +50,9 @@ DROP TABLE IF EXISTS files CASCADE;
 CREATE TABLE files(
     id SERIAL PRIMARY KEY NOT NULL,
     category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
-    name CHAR(128) NOT NULL,
-    converter CHAR(128) NOT NULL,
-    comment CHAR(4096) NOT NULL
+    name VARCHAR(128) NOT NULL,
+    converter VARCHAR(128) NOT NULL,
+    comment VARCHAR(4096) NOT NULL
 );
 
 DROP TABLE IF EXISTS texts;
@@ -74,8 +74,8 @@ DROP TABLE IF EXISTS terms;
 CREATE TABLE terms (
     id SERIAL PRIMARY KEY NOT NULL,
     proj_id INTEGER REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
-    ori_word CHAR(1024) NOT NULL,
-    tar_word CHAR(1024) NOT NULL,
-    comment CHAR(2048),
+    ori_word VARCHAR(1024) NOT NULL,
+    tar_word VARCHAR(1024) NOT NULL,
+    comment VARCHAR(2048),
     commiter INTEGER REFERENCES users(id) ON UPDATE CASCADE NOT NULL -- if a user wants to delete himself/herself, redirect this to a placeholder user, and this entry should NOT be deleted!
 );

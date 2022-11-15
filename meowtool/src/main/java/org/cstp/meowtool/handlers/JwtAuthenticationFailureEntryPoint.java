@@ -23,7 +23,7 @@ public class JwtAuthenticationFailureEntryPoint implements AuthenticationEntryPo
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ServletOutputStream output = response.getOutputStream();
-        output.write(new ObjectMapper().writeValueAsString(new Result(-100, "Must login first.", null)).getBytes());
+        output.write(new ObjectMapper().writeValueAsString(new Result(-100, "Not logged in.", null)).getBytes());
         output.close();
     }
     

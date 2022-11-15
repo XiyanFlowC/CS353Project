@@ -14,12 +14,12 @@ import lombok.Data;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "cstp.jwt")
+@ConfigurationProperties(prefix = "meowtool.jwt")
 public class JwtUtil {
     private long expireInterval; // unit: second
     private String secretKey;
-    private String header;
-    private String issuer;
+    private String header = "Authorization";
+    private String issuer = "jwt.meowtool.org";
 
     public String issueToken(String username) {
         Date currentTime = new Date();

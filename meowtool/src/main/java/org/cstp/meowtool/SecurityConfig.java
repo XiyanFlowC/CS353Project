@@ -3,56 +3,37 @@ package org.cstp.meowtool;
 import org.cstp.meowtool.filters.JwtAuthenticationFilter;
 import org.cstp.meowtool.handlers.JwtAccessDiniedHandler;
 import org.cstp.meowtool.handlers.JwtAuthenticationFailureEntryPoint;
-// import org.cstp.meowtool.handlers.JwtLogoutSuccessHandler;
-// import org.cstp.meowtool.handlers.LoginFailureHandler;
-// import org.cstp.meowtool.handlers.LoginSuccessHandler;
-// import org.cstp.meowtool.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-// import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-// import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-// import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-// import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.RequiredArgsConstructor;
 
 @Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
-@EnableGlobalAuthentication
 public class SecurityConfig {
-    // @Autowired
-    // LoginFailureHandler loginFailureHandler;
-
-    // @Autowired
-    // LoginSuccessHandler loginSuccessHandler;
-
     @Autowired
     JwtAuthenticationFailureEntryPoint jwtAuthenticationFailureEntryPoint;
 
     @Autowired
     JwtAccessDiniedHandler jwtAccessDiniedHandler;
 
-    // @Autowired
-    // UserService userService;
-
-    // @Autowired
-    // JwtLogoutSuccessHandler jwtLogoutSuccessHandler;
-
     @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
 
     private static final String[] URL_WHITELIST = {
-        "/auth/login",
-        "/auth/logout",
+        "/auth/**",
+        "/user/register",
     };
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().antMatchers(URL_WHITELIST);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -67,8 +48,11 @@ public class SecurityConfig {
 
             .and()
             .authorizeRequests()
-            .antMatchers(URL_WHITELIST).permitAll()
-            .anyRequest().authenticated()
+            .antMatchers(HttpMethod.POST, "/user/user").hasRole("ADMIN")
+            .antMatchers("/user/**").hasRole("USER")
+            .anyRequest().permitAll()
+            //.antMatchers(URL_WHITELIST).permitAll()
+            //.anyRequest().authenticated()
 
             .and()
             .exceptionHandling()
