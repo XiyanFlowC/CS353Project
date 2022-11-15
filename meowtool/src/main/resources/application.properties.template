@@ -1,0 +1,17 @@
+server.address=0.0.0.0
+server.port=8080
+
+spring.thymeleaf.cache=false
+
+spring.datasource.platform=postgres
+spring.datasource.url=jdbc:postgresql://127.0.0.1:5432/meowtool
+spring.datasource.driver-class-name=org.postgresql.Driver
+# TODO: fill in your username and password.
+spring.datasource.username=postgres
+spring.datasource.password=password
+
+cstp.jwt.header=Authorization
+# TODO: specify your issuer name, secret key, etc. here.
+cstp.jwt.issuer=jwtiss.example.org
+cstp.jwt.secret-key=yourKeyForHS512Here
+cstp.jwt.expire-interval=86400
