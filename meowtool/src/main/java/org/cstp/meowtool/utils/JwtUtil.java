@@ -26,8 +26,6 @@ public class JwtUtil {
         Date expireTime = new Date(currentTime.getTime() + expireInterval * 1000);
 
         Map<String, Object> extraClaims = new HashMap<>();
-        // extraClaims.put("name", username);
-        // extraClaims.put("role", role);
 
         return Jwts.builder()
             .setHeaderParam("typ", "JWT")
