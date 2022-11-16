@@ -21,3 +21,5 @@ Global errorcode
 |-100|not login|
 |-101|access denined|
 |-102|login error|
+|-103|user blocked.|
+|-90XX|Server internal error|

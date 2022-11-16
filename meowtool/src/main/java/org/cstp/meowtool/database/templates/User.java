@@ -15,7 +15,7 @@ public class User implements UserDetails {
     private String username;
     private String email;
     private String role;
-    private String rating;
+    private Integer rating;
     private String password;
     private String salt;
     private boolean disable;

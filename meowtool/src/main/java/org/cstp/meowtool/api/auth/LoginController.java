@@ -36,6 +36,8 @@ public class LoginController {
         
         // TODO: enhance this method, add salt and encryption to password
         if (user.getPassword().compareTo(data.password) == 0) {
+            if (!user.isEnabled()) return new Result(-103, "User blocked.", null);
+
             return Result.succ(jwtUtil.issueToken(data.username));
         } else return new Result(-102, "Password error.", null);
     }

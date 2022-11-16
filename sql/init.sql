@@ -41,7 +41,7 @@ CREATE TABLE categories (
     id SERIAL PRIMARY KEY NOT NULL,
     proj_id INTEGER REFERENCES projects(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     name VARCHAR(512) NOT NULL,
-    "desc" VARCHAR(4096) NOT NULL
+    comment VARCHAR(4096) NOT NULL
 );
 
 CREATE INDEX proj_idx ON categories(proj_id);
