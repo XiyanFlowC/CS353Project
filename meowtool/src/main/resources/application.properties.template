@@ -15,3 +15,6 @@ cstp.jwt.header=Authorization
 cstp.jwt.issuer=jwtiss.example.org
 cstp.jwt.secret-key=yourKeyForHS512Here
 cstp.jwt.expire-interval=86400
+
+swagger.enabled=true
+spring.mvc.pathmatch.matching-strategy=ant_path_matcher

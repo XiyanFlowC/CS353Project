@@ -49,7 +49,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/user").hasRole("ADMIN")
-            .antMatchers("/user/**").hasRole("USER")
+            .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
             .anyRequest().permitAll()
             //.antMatchers(URL_WHITELIST).permitAll()
             //.anyRequest().authenticated()

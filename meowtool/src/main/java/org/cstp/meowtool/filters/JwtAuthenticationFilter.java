@@ -45,6 +45,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (jwtUtil.isExpired(claims)) {
             throw new JwtException("token expired.");
         }
+        if (claims.getIssuer().compareTo(jwtUtil.getIssuer()) != 0) {
+            throw new JwtException("invalid issuer.");
+        }
 
         String username = claims.getSubject();
         UserDetails user = userService.loadUserByUsername(username);

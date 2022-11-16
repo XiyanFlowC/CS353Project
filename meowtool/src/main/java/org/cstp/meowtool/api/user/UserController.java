@@ -1,6 +1,10 @@
 package org.cstp.meowtool.api.user;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import org.cstp.meowtool.database.templates.User;
 import org.cstp.meowtool.database.templates.UserMapper;
@@ -9,20 +13,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
+@Api(tags = "User Management")
 @RestController
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     UserMapper userMapper;
 
-    @GetMapping("/user/user/{id}")
-    public User getUser(@PathVariable("id") Integer id) {
+    @ApiOperation("Get User Information by User ID")
+    @GetMapping("/user/{id}")
+    public User getUser(@PathVariable("id")@ApiParam(value="User ID", required = true, example = "1") Integer id) {
         return userMapper.selectId(id);
     }
 
-    @PostMapping("/user/user")
-    public Result createUser(User user) {
+    @ApiOperation("Create a New User (Admin)")
+    @PostMapping("/user")
+    public Result createUser(@ApiParam(value = "User Object", required = true)@RequestBody User user) {
         if (userMapper.selectName(user.getUsername()) != null) return Result.fail("username has already registered.");
         if (userMapper.selectEmail(user.getEmail()) != null) return Result.fail("email address has already registered.");
         
