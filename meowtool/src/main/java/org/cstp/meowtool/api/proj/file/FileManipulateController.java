@@ -129,7 +129,6 @@ public class FileManipulateController {
     @DeleteMapping("/{id}/contents")
     public Result clearTexts (@PathVariable("id") Integer id) {
         File file = fileMapper.selectFile(id);
-        // if (file == null) return Result.fail(NO_SUCH_FILE); // no need to check, delete is indempotent
         if (!checkOwner(file)) return Result.fail(-101, PERMISION_DENINED);
 
         return Result.succ(textMapper.deleteTextsByFile(id));

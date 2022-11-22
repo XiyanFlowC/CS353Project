@@ -11,7 +11,7 @@ public interface FileMapper {
     public File selectFile(Integer id);
 
     @Select("SELECT * FROM files WHERE category_id = #{categoryId}                                                                                                                                                              ")
-    public File selectByCategory(Integer categoryId);
+    public File[] selectByCategory(Integer categoryId);
 
     @Insert("INSERT INTO files (category_id, name, converter, comment) VALUES (#{category_id}, #{name}, #{converter}, #{comment})")
     public int insertFile(File file);

@@ -11,6 +11,7 @@ import org.cstp.meowtool.utils.DaoUtil;
 import org.cstp.meowtool.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -63,7 +64,7 @@ public class CategoryManipulateController {
     }
 
     @ApiOperation("Create a new file in specified category.")
-    @PostMapping("/{id}/new_file")
+    @PostMapping("/{id}/files")
     public Result createFile (@PathVariable("id") Integer categoryId, @RequestBody FileData data) {
         Category category = categoryMapper.selectCategory(categoryId);
         if (category == null) return Result.fail(-400, INVALID_ID);
@@ -77,6 +78,15 @@ public class CategoryManipulateController {
         int ret = fileMapper.insertFile(file);
         if (ret == 1) return Result.succ(null);
         return RESULT;
+    }
+
+    @ApiOperation("List all files under the specified category.")
+    @GetMapping("/{id}/files")
+    public Result listFiles (@PathVariable("id") Integer id) {
+        Category category = categoryMapper.selectCategory(id);
+        if (category == null) return Result.fail(-400, INVALID_ID);
+
+        return Result.succ(fileMapper.selectByCategory(id));
     }
     
     @ApiOperation("Update a category.")

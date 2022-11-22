@@ -56,6 +56,7 @@ public class ProjectController {
         @ApiParam(value = "The amount of entries will be shown in a single page.", example = "10", allowableValues = "range[1,infinity]") Integer size) {
         if (page == null) page = 1;
         if (size == null) size = 10;
+        if (page < 1 || size < 1) return Result.fail(-500, "invalid parameter(s).");
             
         if (null == projectMapper.selectProject(projId)) return INVALID_ID_FAIL_MSG;
 
@@ -80,6 +81,7 @@ public class ProjectController {
         @ApiParam(value = "The amount of entries will be shown in a single page.", example = "10", allowableValues = "range[1,infinity]") Integer size) {
         if (page == null) page = 1;
         if (size == null) size = 10;
+        if (page < 1 || size < 1) return Result.fail(-500, "invalid parameter(s).");
 
         return Result.succ(projectMapper.selectWithPaging(page, size));
     }

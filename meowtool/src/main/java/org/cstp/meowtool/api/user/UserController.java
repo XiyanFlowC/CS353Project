@@ -5,12 +5,14 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
 import org.cstp.meowtool.database.User;
 import org.cstp.meowtool.database.UserMapper;
 import org.cstp.meowtool.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,8 +26,8 @@ public class UserController {
 
     @ApiOperation("Get User Information by User ID")
     @GetMapping("/user/{id}")
-    public User getUser(@PathVariable("id")@ApiParam(value="User ID", required = true, example = "1") Integer id) {
-        return userMapper.selectId(id);
+    public Result getUser(@PathVariable("id")@ApiParam(value="User ID", required = true, example = "1") Integer id) {
+        return Result.succ(userMapper.selectId(id));
     }
 
     public Result fetchUser(@ApiParam(value = "User name to be queried.", required = true, example = "admin") String username) {
@@ -41,5 +43,16 @@ public class UserController {
         int ret = userMapper.insertUser(user);
         if (ret == 0) return Result.succ(0, "user registered succssfully.");
         else return Result.fail("failed to create user.");
+    }
+
+    @ApiOperation("Disable or enable a user.")
+    @PutMapping("/user/{id}")
+    public Result disableUser(@PathVariable("id") Integer id, Boolean disable) {
+        User user = userMapper.selectId(id);
+        if (user == null) return Result.fail("Specified user does not exisit.");
+
+        user.setDisable(disable);
+        userMapper.updateUser(user);
+        return Result.succ(null);
     }
 }

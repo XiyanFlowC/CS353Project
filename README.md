@@ -18,6 +18,7 @@ Using maven to build and run this project.
 Global errorcode
 |code|description|
 |----|-----------|
+|0|operation completed successfully|
 |-100|not login|
 |-101|access denined|
 |-102|login error|
