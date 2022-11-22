@@ -23,7 +23,7 @@ public class Result {
      * Create a success message with specified object.
      * 
      * @param object The object needs to pass to frontend.
-     * @return A new {@code Result}.
+     * @return A new {@code Result} object.
      */
     public static Result succ (Object object) {
         return new Result(0, "Operation success", object);
@@ -34,9 +34,21 @@ public class Result {
      * Note the object will be left as null.
      * 
      * @param message The message needs to pass to frontend.
-     * @return New {@code Result}.
+     * @return New {@code Result} object.
      */
     public static Result fail (String message) {
         return new Result(-1, message, null);
+    }
+
+    /**
+     * Create a new failed message to announce the client some error occured. Note this
+     * method allow you to set the error code. Set it reasonable. (with null data field)
+     * 
+     * @param error The error code to mark the error type.
+     * @param message The message to describe the error. Leave it empty if it is a secret.
+     * @return New {@code Result} object.
+     */
+    public static Result fail (Integer error, String message) {
+        return new Result(error, message, null);
     }
 }

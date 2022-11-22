@@ -1,7 +1,7 @@
 package org.cstp.meowtool.api.auth;
 
-import org.cstp.meowtool.database.templates.User;
-import org.cstp.meowtool.database.templates.UserMapper;
+import org.cstp.meowtool.database.User;
+import org.cstp.meowtool.database.UserMapper;
 import org.cstp.meowtool.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;

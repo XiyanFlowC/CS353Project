@@ -1,4 +1,4 @@
-package org.cstp.meowtool.database.templates;
+package org.cstp.meowtool.database;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,6 +1,6 @@
 package org.cstp.meowtool.services;
 
-import org.cstp.meowtool.database.templates.UserMapper;
+import org.cstp.meowtool.database.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

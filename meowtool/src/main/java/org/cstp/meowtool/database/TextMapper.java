@@ -1,4 +1,4 @@
-package org.cstp.meowtool.database.templates;
+package org.cstp.meowtool.database;
 
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
@@ -30,8 +30,11 @@ public interface TextMapper {
     @Update("UPDATE texts SET trans=#{trans} WHERE id=#{id}")
     public int updateTranslation(@Param("id") Integer id, @Param("trans") String translation);
 
-    @Insert("INSERT INTO texts (file_id, ori_text, trans) VALUE (#{file_id}, #{ori_text}, #{trans})")
+    @Insert("INSERT INTO texts (file_id, ori_text, trans) VALUES (#{file_id}, #{ori_text}, #{trans})")
     public int insertText(Text text);
+
+    @Delete("DELETE FROM texts WHERE file_id=#{file_id}")
+    public int deleteTextsByFile(Integer fileid);
 
     @Delete("DELETE FROM texts WHERE id=#{id}")
     public int deleteText(Integer id);
