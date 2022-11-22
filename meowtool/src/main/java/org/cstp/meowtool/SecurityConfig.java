@@ -32,7 +32,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers(URL_WHITELIST);
+        return web -> web.ignoring().antMatchers(URL_WHITELIST); // has no effect, why?
     }
 
     @Bean
@@ -50,6 +50,7 @@ public class SecurityConfig {
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/user").hasRole("ADMIN")
             .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
+            .antMatchers("/proj/**").hasAnyRole("USER", "ADMIN")
             .anyRequest().permitAll()
             //.antMatchers(URL_WHITELIST).permitAll()
             //.anyRequest().authenticated()

@@ -28,6 +28,10 @@ public class UserController {
         return userMapper.selectId(id);
     }
 
+    public Result fetchUser(@ApiParam(value = "User name to be queried.", required = true, example = "admin") String username) {
+        return Result.succ(userMapper.selectName(username));
+    }
+
     @ApiOperation("Create a New User (Admin)")
     @PostMapping("/user")
     public Result createUser(@ApiParam(value = "User Object", required = true)@RequestBody User user) {

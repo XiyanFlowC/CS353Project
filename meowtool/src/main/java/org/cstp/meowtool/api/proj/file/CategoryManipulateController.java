@@ -98,6 +98,6 @@ public class CategoryManipulateController {
         if (category == null) return Result.fail(-400, INVALID_ID);
         if (!checkOwner(category)) return Result.fail(-101, "Only the project owner could delete files.");
 
-        return DaoUtil.uniqueUpdate(categoryMapper.deleteCategory(id));
+        return Result.succ(categoryMapper.deleteCategory(id));
     }
 }

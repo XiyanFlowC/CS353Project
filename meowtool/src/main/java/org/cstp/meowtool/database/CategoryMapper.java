@@ -12,10 +12,10 @@ public interface CategoryMapper {
     @Select("SELECT * FROM categories WHERE id = #{id}")
     public Category selectCategory(Integer id);
 
-    @Select("SELECT * FROM categories WHERE proj_id=#{proj_id}")
-    public Category[] selectByProject(Integer proj_id);
+    @Select("SELECT * FROM categories WHERE proj_id=#{projId}")
+    public Category[] selectByProject(Integer projId);
 
-    @Select("SELECT * FROM (SELECT * FROM categories WHERE proj_id=#{pid}) OFFSET (#{page}-1)*#{size} LIMIT #{size}")
+    @Select("SELECT * FROM (SELECT * FROM categories WHERE proj_id=#{pid}) AS cates OFFSET (#{page}-1)*#{size} LIMIT #{size}")
     public Category[] selectByProjectWithPaging(@Param("pid") Integer projId, @Param("page") Integer page, @Param("size") Integer size);
 
     @Insert("INSERT INTO categories (proj_id, name, comment) VALUES (#{proj_id}, #{name}, #{comment})")
@@ -26,6 +26,4 @@ public interface CategoryMapper {
 
     @Update("UPDATE categories SET proj_id=#{proj_id}, name=#{name}, comment=#{comment} WHERE id = #{id}")
     public int updateCategory(Category category);
-
-    // public int updateCategoryUpdateTime(Category category);
 }

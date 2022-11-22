@@ -38,7 +38,7 @@ public class TranslateController {
     @DeleteMapping("/trans/{id}")
     public Result removeTranslation(@PathVariable("id") Integer id) {
         Text text = textMapper.selectId(id);
-        if (text == null) return Result.fail("Invalid text ID.");
+        if (text == null) return Result.succ(null);
 
         text.setTrans("");
         int ret = textMapper.updateText(text);

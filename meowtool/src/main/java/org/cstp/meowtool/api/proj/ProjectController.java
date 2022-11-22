@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Api(tags = "Project management")
 @RestController
@@ -49,7 +50,13 @@ public class ProjectController {
 
     @ApiOperation("List categories with paging.")
     @GetMapping("/{id}/category")
-    public Result listCategories(@PathVariable("id") Integer projId, int page, int size) {
+    public Result listCategories(
+        @PathVariable("id") Integer projId,
+        @ApiParam(value = "The page number.", example = "1", allowableValues = "range[1,infinity]") Integer page,
+        @ApiParam(value = "The amount of entries will be shown in a single page.", example = "10", allowableValues = "range[1,infinity]") Integer size) {
+        if (page == null) page = 1;
+        if (size == null) size = 10;
+            
         if (null == projectMapper.selectProject(projId)) return INVALID_ID_FAIL_MSG;
 
         return Result.succ(categoryMapper.selectByProjectWithPaging(projId, page, size));
@@ -66,10 +73,15 @@ public class ProjectController {
         return DaoUtil.uniqueUpdate(projectMapper.insertProject(data));
     }
 
-    @ApiOperation("Listing the projects with paging enabled.")
+    @ApiOperation("List the projects with paging enabled.")
     @GetMapping
-    public Result listProject(Integer page, Integer size) {
-        return Result.succ(projectMapper.selectWithPaging(null, null));
+    public Result listProject(
+        @ApiParam(value = "The page number.", example = "1", allowableValues = "range[1,infinity]") Integer page,
+        @ApiParam(value = "The amount of entries will be shown in a single page.", example = "10", allowableValues = "range[1,infinity]") Integer size) {
+        if (page == null) page = 1;
+        if (size == null) size = 10;
+
+        return Result.succ(projectMapper.selectWithPaging(page, size));
     }
 
     @ApiOperation("Delete the specified project.")
@@ -80,12 +92,12 @@ public class ProjectController {
 
         for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
             if (authority.getAuthority().compareTo("ROLE_ADMIN") == 0)
-                return DaoUtil.uniqueUpdate(projectMapper.deleteProject(id));
+                return Result.succ(projectMapper.deleteProject(id)); // need to sure that delete is idempotent.
         }
         if (authUtil.getUser().getId().equals(project.getOwner())) {
             return Result.fail(-101, "only owner or admin can delete the project.");
         }
         
-        return DaoUtil.uniqueUpdate(projectMapper.deleteProject(id));
+        return Result.succ(projectMapper.deleteProject(id));
     }
 }

@@ -112,12 +112,8 @@ public class FileManipulateController {
         for (Text text : data) {
             text.setFile_id(id);
 
-            // try
-            // {
-                int ret = textMapper.insertText(text);
-                if (ret != 1) return Result.fail(-9004, "loop insertion failed due to unknown error.");
-            // }
-            // catch
+            int ret = textMapper.insertText(text);
+            if (ret != 1) return Result.fail(-9004, "loop insertion failed due to unknown error.");
         }
 
         return Result.succ(categoryMapper.selectCategory(id));
@@ -133,7 +129,7 @@ public class FileManipulateController {
     @DeleteMapping("/{id}/contents")
     public Result clearTexts (@PathVariable("id") Integer id) {
         File file = fileMapper.selectFile(id);
-        if (file == null) return Result.fail(NO_SUCH_FILE);
+        // if (file == null) return Result.fail(NO_SUCH_FILE); // no need to check, delete is indempotent
         if (!checkOwner(file)) return Result.fail(-101, PERMISION_DENINED);
 
         return Result.succ(textMapper.deleteTextsByFile(id));
