@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Group {
     private Integer id;
-    private Integer proj_id;
-    private Integer user_id;
+    private Integer projId;
+    private Integer userId;
     private String role;
 }

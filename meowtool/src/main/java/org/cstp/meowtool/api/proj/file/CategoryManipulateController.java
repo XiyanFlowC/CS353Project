@@ -52,7 +52,8 @@ public class CategoryManipulateController {
     private boolean checkOwner(Category category) {
         if (authUtil.hasAuthority("ROLE_ADMIN")) return true;
 
-        Project project = projectMapper.selectProject(category.getProj_id());
+        if (authUtil.hasProjectRole(category.getId(), "SUPERVISOR")) return true;
+        Project project = projectMapper.selectProject(category.getProjId());
         return authUtil.getUser().getId().equals(project.getOwner());
     }
 
@@ -68,10 +69,10 @@ public class CategoryManipulateController {
     public Result createFile (@PathVariable("id") Integer categoryId, @RequestBody FileData data) {
         Category category = categoryMapper.selectCategory(categoryId);
         if (category == null) return Result.fail(-400, INVALID_ID);
-        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner could create new file.");
+        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner/supervisor could create new file.");
 
         File file = new File();
-        file.setCategory_id(categoryId);
+        file.setCategoryId(categoryId);
         file.setComment(data.comment);
         file.setConverter(data.converter);
         file.setName(data.filename);
@@ -94,7 +95,7 @@ public class CategoryManipulateController {
     public Result updateCategory(@PathVariable("id") Integer id, @RequestBody Category data) {
         Category category = categoryMapper.selectCategory(id);
         if (category == null) return Result.fail(-400, INVALID_ID);
-        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner could modify files.");
+        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner/supervisor could modify files.");
 
         data.setId(id);
 
@@ -106,7 +107,7 @@ public class CategoryManipulateController {
     public Result deleteCategory(@PathVariable("id") Integer id) {
         Category category = categoryMapper.selectCategory(id);
         if (category == null) return Result.fail(-400, INVALID_ID);
-        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner could delete files.");
+        if (!checkOwner(category)) return Result.fail(-101, "Only the project owner/supervisor could delete files.");
 
         return Result.succ(categoryMapper.deleteCategory(id));
     }

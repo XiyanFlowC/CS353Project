@@ -55,20 +55,34 @@ CREATE TABLE files(
     comment VARCHAR(4096) NOT NULL
 );
 
+-- proj
+-- proj/proofread
+-- texts, original texts / proofread related
 DROP TABLE IF EXISTS texts;
 CREATE TABLE texts (
     id SERIAL PRIMARY KEY NOT NULL,
     file_id INTEGER REFERENCES files(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     ori_text TEXT NOT NULL,
-    trans TEXT -- translation
+    comment VARCHAR(2048) NOT NULL,
+
+    marked BOOLEAN NOT NULL DEFAULT FALSE,
+
+    stage INTEGER NOT NULL DEFAULT 0,
+    commiter INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    time TIMESTAMP
 );
 
--- DROP TABLE IF EXISTS translations;
--- CREATE TABLE translations (
---     id SERIAL PRIMARY KEY NOT NULL,
---     ori_id INTEGER FOREIGN KEY texts(id) ON DELETE CASCADE ON UPDATE CASCADE,
---     trans TEXT,
--- );
+DROP TABLE IF EXISTS translations;
+CREATE TABLE translations (
+    id SERIAL PRIMARY KEY NOT NULL,
+    ori_id INTEGER REFERENCES texts(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    
+    comment VARCHAR(1024),
+
+    trans TEXT,
+    commiter INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+);
 
 DROP TABLE IF EXISTS terms;
 CREATE TABLE terms (

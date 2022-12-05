@@ -5,15 +5,12 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class Text {
+public class Translation {
     private Integer id;
-    private Integer fileId;
-    private String oriText;
-    private String comment;
-
+    private Integer oriId;
     private Boolean marked;
-
-    private Integer stage;
+    private String comment;
+    private String trans;
     private Integer commiter;
-    private Date time;
+    private Date updateTime;
 }

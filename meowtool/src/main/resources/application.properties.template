@@ -17,4 +17,6 @@ cstp.jwt.secret-key=yourKeyForHS512Here
 cstp.jwt.expire-interval=86400
 
 swagger.enabled=true
-spring.mvc.pathmatch.matching-strategy=ant_path_matcher
+spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
+
+mybatis.configuration.map-underscore-to-camel-case=true

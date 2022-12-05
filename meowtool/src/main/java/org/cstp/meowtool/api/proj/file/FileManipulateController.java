@@ -62,7 +62,8 @@ public class FileManipulateController {
     private boolean checkOwner(File file) {
         if (authUtil.hasAuthority("ROLE_ADMIN")) return true;
 
-        Category category = categoryMapper.selectCategory(file.getCategory_id());
+        Category category = categoryMapper.selectCategory(file.getCategoryId());
+        if (authUtil.hasProjectRole(category.getProjId(), "SUPERVISOR")) return true;
         Project project = projectMapper.selectProject(category.getId());
         return authUtil.getUser().getId().equals(project.getOwner());
     }
@@ -110,7 +111,7 @@ public class FileManipulateController {
         if (!checkOwner(file)) return Result.fail(-101, PERMISION_DENINED);
 
         for (Text text : data) {
-            text.setFile_id(id);
+            text.setFileId(id);
 
             int ret = textMapper.insertText(text);
             if (ret != 1) return Result.fail(-9004, "loop insertion failed due to unknown error.");

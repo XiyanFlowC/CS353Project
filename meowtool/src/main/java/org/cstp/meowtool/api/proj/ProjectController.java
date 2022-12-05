@@ -44,7 +44,7 @@ public class ProjectController {
             return INVALID_ID_FAIL_MSG;
         }
 
-        data.setProj_id(projId);
+        data.setProjId(projId);
         return DaoUtil.uniqueUpdate(categoryMapper.insertCategory(data));
     }
 

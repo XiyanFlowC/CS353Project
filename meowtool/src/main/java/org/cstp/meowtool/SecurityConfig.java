@@ -51,6 +51,7 @@ public class SecurityConfig {
             .antMatchers(HttpMethod.POST, "/user/user").hasRole("ADMIN")
             .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
             .antMatchers("/proj/**").hasAnyRole("USER", "ADMIN")
+            .antMatchers("/term/**").hasAnyRole("USER", "ADMIN")
             .anyRequest().permitAll()
             //.antMatchers(URL_WHITELIST).permitAll()
             //.anyRequest().authenticated()
