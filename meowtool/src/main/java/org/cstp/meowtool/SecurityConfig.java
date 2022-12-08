@@ -31,11 +31,6 @@ public class SecurityConfig {
     };
 
     @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().antMatchers(URL_WHITELIST); // has no effect, why?
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors().and().csrf().disable()
             // using standard controllers for this, disable default pages.
@@ -49,6 +44,7 @@ public class SecurityConfig {
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.POST, "/user/user").hasRole("ADMIN")
+            .antMatchers(HttpMethod.PUT, "/user/user").hasRole("ADMIN")
             .antMatchers("/user/**").hasAnyRole("USER", "ADMIN")
             .antMatchers("/proj/**").hasAnyRole("USER", "ADMIN")
             .antMatchers("/term/**").hasAnyRole("USER", "ADMIN")

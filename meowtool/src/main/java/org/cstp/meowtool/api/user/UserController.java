@@ -45,8 +45,23 @@ public class UserController {
         else return Result.fail("failed to create user.");
     }
 
+    @ApiOperation("Change a user's role")
+    @PutMapping("/user/{id}/role")
+    public Result setUserRole(@PathVariable("id") Integer id, @RequestBody String[] roles) {
+        StringBuilder sb = new StringBuilder();
+        for (String role : roles) {
+            sb.append(role);
+            sb.append(';');
+        }
+        User user = userMapper.selectId(id);
+        user.setRole(sb.toString());
+        userMapper.updateUser(user);
+
+        return Result.succ(null);
+    }
+
     @ApiOperation("Disable or enable a user.")
-    @PutMapping("/user/{id}")
+    @PutMapping("/user/{id}/disable")
     public Result disableUser(@PathVariable("id") Integer id, Boolean disable) {
         User user = userMapper.selectId(id);
         if (user == null) return Result.fail("Specified user does not exisit.");

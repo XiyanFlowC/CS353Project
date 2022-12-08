@@ -18,4 +18,7 @@ public interface TranslationMapper {
 
     @Insert("INSERT INTO translations (ori_id, trans, commiter) VALUES (#{ori_id}, #{trans}, #{usr_id})")
     public int insertNewTranslation(@Param("ori_id") Integer oriId, @Param("trans") String translation, @Param("usr_id") Integer userId);
+
+    @Select("SELECT * FROM translations ORDER BY levenshtein_less_equal(trans, #{target}, #{thershold}) ASC LIMIT #{limit}")
+    public Translation[] selectSimilar(@Param("target") String target, @Param("thershold") Integer thershold, @Param("limit") Integer limit);
 }

@@ -29,4 +29,7 @@ public interface TextMapper {
 
     @Update("UPDATE texts SET marked = TRUE WHERE id=#{id}")
     public int markTranslation(Integer id);
+
+    @Update("UPDATE texts SET marked = FALSE WHERE id=#{id}")
+    public int cleanMark(Integer id);
 }

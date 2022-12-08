@@ -9,10 +9,12 @@ import org.cstp.meowtool.database.Translation;
 import org.cstp.meowtool.database.TranslationMapper;
 import org.cstp.meowtool.utils.AuthUtil;
 import org.cstp.meowtool.utils.Result;
+import org.cstp.meowtool.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,8 +71,16 @@ public class TranslateController {
         return Result.succ(trans);
     }
 
+    @ApiOperation("Get translations (translating chronicle information) of given original text id.")
+    @GetMapping("/trans/{id}/chronicle")
+    public Result getTranslationChronicle(@PathVariable("id") Integer id) {
+        if (!checkAdmission(id)) return PERMISSION_DENIED;
+
+        return Result.succ(translationMapper.selectAllTranslationOfOriId(id));
+    }
+
     @ApiOperation("Update an exsiting translation by its id.")
-    @PutMapping("/trans/{id}")
+    @PostMapping("/trans/{id}")
     public Result updateTranslation(@PathVariable("id") Integer id, @RequestBody String translation) {
         if (!checkAdmission(id)) return PERMISSION_DENIED;
 
@@ -95,13 +105,30 @@ public class TranslateController {
         return Result.succ(null);
     }
 
+    @ApiOperation("Query translations that are similar to the provided one.")
+    @GetMapping("/trans/similar")
+    public Result getSimilarTranslation (String target, Integer thershold, Integer limit) {
+        if (StringUtil.isNullOrEmpty(target)) return Result.fail("Empty target.");
+        
+        if (limit == null || limit > 10) limit = 10;
+        if (thershold == null || thershold > 100) thershold = 100;
+        
+        return Result.succ(translationMapper.selectSimilar(target, thershold, limit));
+    }
+
     @ApiOperation("Mark an translation is weird.")
     @PutMapping("/trans/{id}/mark")
     public Result markTranslation(@PathVariable("id") Integer id) {
         if (!checkAdmission(id)) return PERMISSION_DENIED;
 
-        textMapper.markTranslation(id);
+        return Result.succ(textMapper.markTranslation(id));
+    }
 
-        return Result.succ(null);
+    @ApiOperation("Clean a mark of a text.")
+    @DeleteMapping("/trans/{id}/mark")
+    public Result cleanTranslationMark(@PathVariable("id") Integer id) {
+        if (!checkAdmission(id)) return PERMISSION_DENIED;
+
+        return Result.succ(textMapper.cleanMark(id));
     }
 }
