@@ -10,11 +10,11 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 spring.datasource.username=postgres
 spring.datasource.password=password
 
-cstp.jwt.header=Authorization
+meowtool.jwt.header=Authorization
 # TODO: specify your issuer name, secret key, etc. here.
-cstp.jwt.issuer=jwtiss.example.org
-cstp.jwt.secret-key=yourKeyForHS512Here
-cstp.jwt.expire-interval=86400
+meowtool.jwt.issuer=jwtiss.example.org
+meowtool.jwt.secret-key=yourKeyForHS512Here
+meowtool.jwt.expire-interval=86400
 
 swagger.enabled=true
 spring.mvc.pathmatch.matching-strategy=ANT_PATH_MATCHER
