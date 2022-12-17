@@ -18,12 +18,12 @@ public interface CategoryMapper {
     @Select("SELECT * FROM (SELECT * FROM categories WHERE proj_id=#{pid}) AS cates OFFSET (#{page}-1)*#{size} LIMIT #{size}")
     public Category[] selectByProjectWithPaging(@Param("pid") Integer projId, @Param("page") Integer page, @Param("size") Integer size);
 
-    @Insert("INSERT INTO categories (proj_id, name, comment) VALUES (#{proj_id}, #{name}, #{comment})")
+    @Insert("INSERT INTO categories (proj_id, name, comment) VALUES (#{projId}, #{name}, #{comment})")
     public int insertCategory(Category category);
 
     @Delete("DELETE FROM categories WHERE id=#{id}")
     public int deleteCategory(Integer id);
 
-    @Update("UPDATE categories SET proj_id=#{proj_id}, name=#{name}, comment=#{comment} WHERE id = #{id}")
+    @Update("UPDATE categories SET proj_id=#{projId}, name=#{name}, comment=#{comment} WHERE id = #{id}")
     public int updateCategory(Category category);
 }

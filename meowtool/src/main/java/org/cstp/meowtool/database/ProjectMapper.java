@@ -12,10 +12,10 @@ public interface ProjectMapper {
     @Delete("DELETE FROM projects WHERE id=#{id}")
     public int deleteProject(Integer id);
 
-    @Update("UPDATE projects SET owner=#{owner}, type=#{type}, name=#{name}, tags=#{tags}, ori_lang=#{ori_lang}, tar_lang=#{tar_lang} WHERE id=#{id}")
+    @Update("UPDATE projects SET owner=#{owner}, type=#{type}, name=#{name}, tags=#{tags}, ori_lang=#{oriLang}, tar_lang=#{tarLang} WHERE id=#{id}")
     public int updateProject(Project project);
 
-    @Insert("INSERT INTO projects (owner, type, name, tags, ori_lang, tar_lang) VALUES (#{owner}, #{type}, #{name}, #{tags}, #{ori_lang}, #{tar_lang})")
+    @Insert("INSERT INTO projects (owner, type, name, tags, ori_lang, tar_lang) VALUES (#{owner}, #{type}, #{name}, #{tags}, #{oriLang}, #{tarLang})")
     public int insertProject(Project project);
 
     @Select("SELECT * FROM projects WHERE id=#{id}")

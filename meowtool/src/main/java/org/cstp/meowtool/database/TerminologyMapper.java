@@ -18,13 +18,13 @@ public interface TerminologyMapper {
     @Select("SELECT * FROM terms WHERE proj_id=#{proj_id} AND ori_word=#{ori_word}")
     public Terminology selectByOriWord (@Param("proj_id") Integer projId, @Param("ori_word") String oriWord);
 
-    @Insert("INSERT INTO terms (proj_id, ori_word, tar_word, comment, commiter) VALUES (#{proj_id}, #{ori_word}, #{tar_word}, #{comment}, #{commiter})")
+    @Insert("INSERT INTO terms (proj_id, ori_word, tar_word, comment, commiter) VALUES (#{projId}, #{oriWord}, #{tarWord}, #{comment}, #{commiter})")
     public int insertTerminology (Terminology term);
 
     @Delete("DELETE FROM terms WHERE id=#{id}")
     public int deleteTerminology (Integer id);
 
-    @Update("UPDATE terms SET proj_id=#{proj_id}, ori_word=#{ori_word}, tar_word=#{tar_word}, comment=#{comment}, commiter=#{commiter} WHERE id=#{id}")
+    @Update("UPDATE terms SET proj_id=#{projId}, ori_word=#{oriWord}, tar_word=#{tarWord}, comment=#{comment}, commiter=#{commiter} WHERE id=#{id}")
     public int updateTerminology (Terminology term);
 
     @Update("UPDATE terms SET comment = #{comment} WHERE id=#{id}")

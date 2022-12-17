@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.Data;
 
 @Api(tags = "File Operation")
 @RestController
@@ -103,15 +104,27 @@ public class FileManipulateController {
         return RESULT;
     }
 
+    @Data
+    static class ContentInitData {
+        private final String oriText;
+        private final String comment;
+        private final Boolean marked;
+    }
+
     @ApiOperation("Import text values to the file.")
     @PostMapping("/{id}/contents")
-    public Result importTexts (@PathVariable("id") Integer id, @RequestBody Text[] data) {
+    public Result importTexts (@PathVariable("id") Integer id, @RequestBody ContentInitData[] data) {
         File file = fileMapper.selectFile(id);
         if (file == null) return Result.fail(NO_SUCH_FILE);
         if (!checkOwner(file)) return Result.fail(-101, PERMISION_DENINED);
 
-        for (Text text : data) {
+        for (ContentInitData datum : data) {
+            Text text = new Text();
             text.setFileId(id);
+            text.setCommiter(authUtil.getUser().getId());
+            text.setComment(datum.getComment());
+            text.setMarked(datum.getMarked());
+            text.setOriText(datum.getOriText());
 
             int ret = textMapper.insertText(text);
             if (ret != 1) return Result.fail(-9004, "loop insertion failed due to unknown error.");

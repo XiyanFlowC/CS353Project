@@ -18,7 +18,7 @@ public interface GroupMapper {
     @Select("SELECT * FROM user_group_info WHERE user_id=#{userId}")
     public Group[] selectGroupsByUser (Integer userId);
 
-    @Insert("INSERT INTO user_group_info (proj_id, user_id, role) VALUES (#{proj_id}, #{user_id}, #{role})")
+    @Insert("INSERT INTO user_group_info (proj_id, user_id, role) VALUES (#{projId}, #{userId}, #{role})")
     public int insertGroup (Group group);
 
     @Delete("DELETE FROM user_group_info WHERE id=#{id}")
@@ -33,6 +33,6 @@ public interface GroupMapper {
     @Update("UPDATE user_group_info SET role=#{role} WHERE id=#{id}") // do not update usr id/prj id!
     public Group updateGroupRole (Group group);
 
-    @Update("UPDATE user_group_info SET role=#{role} WHERE proj_id=#{proj_id} AND user_id=#{user_id}")
+    @Update("UPDATE user_group_info SET role=#{role} WHERE proj_id=#{projId} AND user_id=#{userId}")
     public Group updateGroupByProjectUser (Group group);
 }
