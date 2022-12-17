@@ -53,7 +53,14 @@ public class TranslateController {
 
     private boolean checkAdmission(int textId) {
         if (authUtil.hasAuthority("ROLE_ADMIN")) return true;
-        int projId = getProjectId(textId);
+        int projId;
+        try
+        {
+            projId = getProjectId(textId);
+        }
+        catch (NullPointerException ex) {
+            return false;
+        }
 
         return authUtil.hasProjectRole(projId, "SUPERVIOSR") || authUtil.hasProjectRole(projId, "TRANSLATOR");
     }
