@@ -44,6 +44,8 @@ public class AuthUtil {
     public boolean hasProjectRole(int projectId, String role) {
         User user = getUser();
         Group group = groupMapper.selectGroupByProjectUser(projectId, user.getId());
+        if (group == null) return false;
+        
         String[] roles = group.getRole().split(";");
         for (String srole : roles) {
             if (srole.compareTo(role) == 0) return true;
