@@ -35,7 +35,7 @@ public class TerminologyController {
 
     @ApiOperation("Update a terminology by ID")
     @PutMapping("/{id}")
-    public Result updateTerminology(@PathParam("Id") Integer id, @RequestBody Terminology data) {
+    public Result updateTerminology(@PathParam("id") Integer id, @RequestBody Terminology data) {
         if (!authUtil.hasProjectRole(data.getProjId(), "SUPERVISOR")) return Result.fail(-105, "Permission denied.");
 
         data.setCommiter(authUtil.getUser().getId());
