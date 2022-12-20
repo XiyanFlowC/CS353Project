@@ -17,6 +17,9 @@ public interface UserMapper {
     @Select("SELECT * FROM users WHERE username=#{name}")
     public User selectName(String name);
 
+    @Select("SELECT * FROM users WHERE username like '%' || #{name} || '%'")
+    public User[] queryByName (String name);
+
     @Insert("INSERT INTO users (username, email, role, password, salt, rating, disable) VALUES (#{username}, #{email}, #{role}, #{password}, #{salt}, #{rating}, #{disable})")
     public int insertUser(User newUser);
 

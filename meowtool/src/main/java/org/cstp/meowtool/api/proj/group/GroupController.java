@@ -61,8 +61,8 @@ public class GroupController {
     public Result addGroupMember(@PathVariable("prj_id") Integer projId, @PathVariable("usr_id") Integer userId, @RequestBody String role) {
         if (!checkPermission(projId)) return PERMISSION_DENIED;
 
-        if (null == userMapper.selectId(userId)) return Result.fail(-400, "No such user.");
-        if (null == projectMapper.selectProject(projId)) return Result.fail(-401, "Path error, no such a resource.");
+        if (null == userMapper.selectId(userId)) return Result.fail(-403, "No such user.");
+        if (null == projectMapper.selectProject(projId)) return Result.fail(-405, "Path error, no such a resource.");
         if (null != groupMapper.selectGroupByProjectUser(projId, userId)) return Result.fail("Already joined in group!");
 
         Group group = new Group();

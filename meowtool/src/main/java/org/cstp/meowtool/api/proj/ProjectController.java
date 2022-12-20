@@ -26,7 +26,7 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/proj")
 public class ProjectController {
-    private static final Result INVALID_ID_FAIL_MSG = Result.fail(-401, "invalid id");
+    private static final Result INVALID_ID_FAIL_MSG = Result.fail(-400, "invalid id");
 
     @Autowired
     CategoryMapper categoryMapper;
@@ -67,7 +67,7 @@ public class ProjectController {
     @PostMapping
     public Result createProject(@RequestBody Project data) {
         if (null != projectMapper.selectProjectName(data.getName())) {
-            return Result.fail(-400, "Project name has already used.");
+            return Result.fail(-402, "Project name has already used.");
         }
 
         data.setOwner(authUtil.getUser().getId());

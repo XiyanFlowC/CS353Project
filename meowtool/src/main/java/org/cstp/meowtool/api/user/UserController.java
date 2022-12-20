@@ -30,6 +30,12 @@ public class UserController {
         return Result.succ(userMapper.selectId(id));
     }
 
+    @ApiOperation("Search User Information by User Name")
+    @GetMapping("/user/search")
+    public Result searchUser(String queryName) {
+        return Result.succ(userMapper.queryByName(queryName));
+    }
+
     public Result fetchUser(@ApiParam(value = "User name to be queried.", required = true, example = "admin") String username) {
         return Result.succ(userMapper.selectName(username));
     }
