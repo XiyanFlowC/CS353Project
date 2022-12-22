@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,6 +75,18 @@ public class ProjectController {
         return DaoUtil.uniqueUpdate(projectMapper.insertProject(data));
     }
 
+    @ApiOperation("Update project.")
+    @PutMapping("/{id}")
+    public Result updateProject(@PathVariable("id") Integer id, @RequestBody Project project) {
+        Project proj = projectMapper.selectProject(id);
+        if (proj == null) return INVALID_ID_FAIL_MSG;
+        if (!authUtil.hasProjectRole(id, "SUPERVISOR")) return Result.fail(-105, "Only supervisors are allowed to update the project");
+
+        project.setId(id);
+
+        return Result.succ(projectMapper.updateProject(project));
+    }
+
     @ApiOperation("List the projects with paging enabled.")
     @GetMapping
     public Result listProject(
@@ -97,7 +110,7 @@ public class ProjectController {
                 return Result.succ(projectMapper.deleteProject(id)); // need to sure that delete is idempotent.
         }
         if (authUtil.getUser().getId().equals(project.getOwner())) {
-            return Result.fail(-101, "only owner or admin can delete the project.");
+            return Result.fail(-105, "only owner or admin can delete the project.");
         }
         
         return Result.succ(projectMapper.deleteProject(id));

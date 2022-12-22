@@ -21,4 +21,7 @@ public interface TranslationMapper {
 
     @Select("SELECT * FROM translations ORDER BY levenshtein_less_equal(trans, #{target}, #{thershold}) ASC LIMIT #{limit}")
     public Translation[] selectSimilar(@Param("target") String target, @Param("thershold") Integer thershold, @Param("limit") Integer limit);
+
+    @Select("SELECT * FROM translations WHERE ori_id=(SELECT id FROM texts ORDER BY levenshtein_less_equal(ori_text, #{target}, #{thershold}) ASC LIMIT #{limit})")
+    public Translation[] selectOriSimilar(@Param("target") String target, @Param("thershold") Integer thershold, @Param("limit") Integer limit);
 }

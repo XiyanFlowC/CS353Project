@@ -58,7 +58,7 @@ public class TranslateController {
         {
             projId = getProjectId(textId);
         }
-        catch (NullPointerException ex) {
+        catch (Exception ex) {
             return false;
         }
 
@@ -121,6 +121,18 @@ public class TranslateController {
         if (thershold == null || thershold > 100) thershold = 100;
         
         return Result.succ(translationMapper.selectSimilar(target, thershold, limit));
+    }
+
+    @ApiOperation("Query translations whose oriText are similar to the provided one.")
+    @GetMapping("/trans/{id}/similar")
+    public Result getSimilar (@PathVariable("id") Integer id, Integer thershold, Integer limit) {
+        Text ori = textMapper.selectId(id);
+        if (ori == null) return Result.fail("Invalid original text id.");
+        
+        if (limit == null || limit > 10) limit = 10;
+        if (thershold == null || thershold > 100) thershold = 100;
+        
+        return Result.succ(translationMapper.selectOriSimilar(ori.getOriText(), thershold, limit));
     }
 
     @ApiOperation("Mark an translation is weird.")
