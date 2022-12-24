@@ -15,10 +15,10 @@ public interface TextMapper {
     @Select("SELECT * FROM texts WHERE file_id=#{fileid} ORDER BY id ASC")
     public Text[] selectByFile(@Param("fileid") Integer fileId);
 
-    @Update("UPDATE texts SET ori_text=#{oriText}, comment=#{comment}, file_id=#{fileId}, marked=#{marked} WHERE id=#{id}")
+    @Update("UPDATE texts SET ori_text=#{oriText}, comment=#{comment}, file_id=#{fileId}, marked=#{marked}, translation=#{translation} WHERE id=#{id}")
     public int updateText(Text text);
 
-    @Insert("INSERT INTO texts (file_id, ori_text, comment, marked, commiter) VALUES (#{fileId}, #{oriText}, #{comment}, #{marked}, #{commiter})")
+    @Insert("INSERT INTO texts (file_id, ori_text, comment, marked, commiter, translation) VALUES (#{fileId}, #{oriText}, #{comment}, #{marked}, #{commiter}, #{translation})")
     public int insertText(Text text);
 
     @Delete("DELETE FROM texts WHERE file_id=#{fileId}")

@@ -58,7 +58,7 @@ CREATE TABLE files(
 -- proj
 -- proj/proofread
 -- texts, original texts / proofread related
-DROP TABLE IF EXISTS texts;
+DROP TABLE IF EXISTS texts CASCADE;
 CREATE TABLE texts (
     id SERIAL PRIMARY KEY NOT NULL,
     file_id INTEGER REFERENCES files(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,

@@ -125,6 +125,7 @@ public class FileManipulateController {
             text.setComment(datum.getComment());
             text.setMarked(datum.getMarked());
             text.setOriText(datum.getOriText());
+            text.setTranslation("");
 
             int ret = textMapper.insertText(text);
             if (ret != 1) return Result.fail(-9004, "loop insertion failed due to unknown error.");
