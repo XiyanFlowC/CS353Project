@@ -89,7 +89,7 @@ public class CategoryManipulateController {
 
         return Result.succ(fileMapper.selectByCategory(id));
     }
-    
+
     @ApiOperation("Update a category.")
     @PutMapping("/{id}")
     public Result updateCategory(@PathVariable("id") Integer id, @RequestBody Category data) {

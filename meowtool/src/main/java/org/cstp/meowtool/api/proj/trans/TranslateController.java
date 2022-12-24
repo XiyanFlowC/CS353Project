@@ -1,7 +1,10 @@
 package org.cstp.meowtool.api.proj.trans;
 
+import org.cstp.meowtool.database.Category;
 import org.cstp.meowtool.database.CategoryMapper;
+import org.cstp.meowtool.database.File;
 import org.cstp.meowtool.database.FileMapper;
+import org.cstp.meowtool.database.Project;
 import org.cstp.meowtool.database.ProjectMapper;
 import org.cstp.meowtool.database.Text;
 import org.cstp.meowtool.database.TextMapper;
@@ -27,6 +30,8 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/trans")
 public class TranslateController {
+    private static final Result INVALID_ID = Result.fail("Invalid text ID.");
+
     private static final Result PERMISSION_DENIED = Result.fail(-105, "Project permission denied.");
 
     @Autowired
@@ -47,31 +52,34 @@ public class TranslateController {
     @Autowired
     AuthUtil authUtil;
 
-    private int getProjectId (int textId) {
-        return projectMapper.selectProject(categoryMapper.selectCategory(fileMapper.selectFile(textMapper.selectId(textId).getFileId()).getCategoryId()).getProjId()).getId();
+    private int getProjectId (Text text) {
+        if (text == null) return -1;
+        File file = fileMapper.selectFile(text.getFileId());
+        if (file == null) return -2;
+        Category category = categoryMapper.selectCategory(file.getCategoryId());
+        if (category == null) return -3;
+        Project project = projectMapper.selectProject(category.getProjId());
+        if (project == null) return -4;
+        return 0;
     }
 
-    private boolean checkAdmission(int textId) {
+    private boolean checkAdmission(Text text) {
         if (authUtil.hasAuthority("ROLE_ADMIN")) return true;
-        int projId;
-        try
-        {
-            projId = getProjectId(textId);
-        }
-        catch (Exception ex) {
+        int projId = getProjectId(text);
+        if (projId < 0) {
             return false;
         }
 
-        return authUtil.hasProjectRole(projId, "SUPERVIOSR") || authUtil.hasProjectRole(projId, "TRANSLATOR");
+        return authUtil.hasProjectRole(projId, "SUPERVIOSR") || authUtil.hasProjectRole(projId, "TRANSLATOR") || authUtil.hasProjectRole(projId, "PROOFREADER");
     }
 
     @ApiOperation("Get a translation general information")
     @GetMapping("/trans/{id}")
     public Result getTranslationEntry(@PathVariable("id") Integer id) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
-
         Text text = textMapper.selectId(id);
-        if (text == null) return Result.fail("specified text not found");
+        if (text == null) return INVALID_ID;
+
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
 
         Translation trans = translationMapper.selectByOriId(id);
 
@@ -81,7 +89,10 @@ public class TranslateController {
     @ApiOperation("Get translations (translating chronicle information) of given original text id.")
     @GetMapping("/trans/{id}/chronicle")
     public Result getTranslationChronicle(@PathVariable("id") Integer id) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
+        Text text = textMapper.selectId(id);
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
 
         return Result.succ(translationMapper.selectAllTranslationOfOriId(id));
     }
@@ -89,10 +100,10 @@ public class TranslateController {
     @ApiOperation("Update an exsiting translation by its id.")
     @PostMapping("/trans/{id}")
     public Result updateTranslation(@PathVariable("id") Integer id, @RequestBody String translation) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
-
         Text text = textMapper.selectId(id);
-        if (text == null) return Result.fail("Invalid text ID.");
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
 
         translationMapper.insertNewTranslation(id, translation, authUtil.getUser().getId());
 
@@ -102,10 +113,10 @@ public class TranslateController {
     @ApiOperation("Clean an exisiting translation by its id.")
     @DeleteMapping("/trans/{id}")
     public Result removeTranslation(@PathVariable("id") Integer id) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
-
         Text text = textMapper.selectId(id);
-        if (text == null) return Result.fail("Invalid text ID.");
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
         
         translationMapper.insertNewTranslation(id, "", authUtil.getUser().getId());
 
@@ -138,7 +149,10 @@ public class TranslateController {
     @ApiOperation("Mark an translation is weird.")
     @PutMapping("/trans/{id}/mark")
     public Result markTranslation(@PathVariable("id") Integer id) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
+        Text text = textMapper.selectId(id);
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
 
         return Result.succ(textMapper.markTranslation(id));
     }
@@ -146,7 +160,10 @@ public class TranslateController {
     @ApiOperation("Clean a mark of a text.")
     @DeleteMapping("/trans/{id}/mark")
     public Result cleanTranslationMark(@PathVariable("id") Integer id) {
-        if (!checkAdmission(id)) return PERMISSION_DENIED;
+        Text text = textMapper.selectId(id);
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
 
         return Result.succ(textMapper.cleanMark(id));
     }
