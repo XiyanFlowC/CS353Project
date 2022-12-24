@@ -10,6 +10,7 @@ public class Text {
     private Integer fileId;
     private String oriText;
     private String comment;
+    private String translation;
 
     private Boolean marked;
 

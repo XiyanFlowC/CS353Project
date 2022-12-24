@@ -26,10 +26,10 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-@Api(tags = "Translating")
-@RestController
-@RequestMapping("/trans")
-public class TranslateController {
+// @Api(tags = "Translating")
+// @RestController
+// @RequestMapping("/trans")
+public class TranslateControllerOld {
     private static final Result INVALID_ID = Result.fail("Invalid text ID.");
 
     private static final Result PERMISSION_DENIED = Result.fail(-105, "Project permission denied.");
@@ -45,6 +45,9 @@ public class TranslateController {
 
     @Autowired
     ProjectMapper projectMapper;
+
+    @Autowired
+    TranslationMapper translationMapper;
 
     @Autowired
     AuthUtil authUtil;
@@ -78,7 +81,20 @@ public class TranslateController {
 
         if (!checkAdmission(text)) return PERMISSION_DENIED;
 
-        return Result.succ(text);
+        Translation trans = translationMapper.selectByOriId(id);
+
+        return Result.succ(trans);
+    }
+
+    @ApiOperation("Get translations (translating chronicle information) of given original text id.")
+    @GetMapping("/trans/{id}/chronicle")
+    public Result getTranslationChronicle(@PathVariable("id") Integer id) {
+        Text text = textMapper.selectId(id);
+        if (text == null) return INVALID_ID;
+        
+        if (!checkAdmission(text)) return PERMISSION_DENIED;
+
+        return Result.succ(translationMapper.selectAllTranslationOfOriId(id));
     }
 
     @ApiOperation("Update an exsiting translation by its id.")
@@ -89,13 +105,12 @@ public class TranslateController {
         
         if (!checkAdmission(text)) return PERMISSION_DENIED;
 
-        text.setTranslation(translation);
-        textMapper.updateText(text);
+        translationMapper.insertNewTranslation(id, translation, authUtil.getUser().getId());
 
         return Result.succ(null);
     }
 
-    @ApiOperation("Delete an exisiting text by its id.")
+    @ApiOperation("Clean an exisiting translation by its id.")
     @DeleteMapping("/trans/{id}")
     public Result removeTranslation(@PathVariable("id") Integer id) {
         Text text = textMapper.selectId(id);
@@ -103,9 +118,32 @@ public class TranslateController {
         
         if (!checkAdmission(text)) return PERMISSION_DENIED;
         
-        textMapper.deleteText(id);
+        translationMapper.insertNewTranslation(id, "", authUtil.getUser().getId());
 
         return Result.succ(null);
+    }
+
+    @ApiOperation("Query translations that are similar to the provided one.")
+    @GetMapping("/trans/similar")
+    public Result getSimilarTranslation (String target, Integer thershold, Integer limit) {
+        if (StringUtil.isNullOrEmpty(target)) return Result.fail("Empty target.");
+        
+        if (limit == null || limit > 10) limit = 10;
+        if (thershold == null || thershold > 100) thershold = 100;
+        
+        return Result.succ(translationMapper.selectSimilar(target, thershold, limit));
+    }
+
+    @ApiOperation("Query translations whose oriText are similar to the provided one.")
+    @GetMapping("/trans/{id}/similar")
+    public Result getSimilar (@PathVariable("id") Integer id, Integer thershold, Integer limit) {
+        Text ori = textMapper.selectId(id);
+        if (ori == null) return Result.fail("Invalid original text id.");
+        
+        if (limit == null || limit > 10) limit = 10;
+        if (thershold == null || thershold > 100) thershold = 100;
+        
+        return Result.succ(translationMapper.selectOriSimilar(ori.getOriText(), thershold, limit));
     }
 
     @ApiOperation("Mark an translation is weird.")
